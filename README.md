@@ -4,7 +4,7 @@
 
 
 ## Usage
-本程序由python语言编写, 是bookshelf(https://github.com/zhiying8710/bookshelf.git)结果的web展示界面
+本程序由python语言编写, 是([bookshelf](https://github.com/zhiying8710/bookshelf.git))结果的web展示界面
 
 
 

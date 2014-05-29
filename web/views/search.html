@@ -1,0 +1,31 @@
+<?py _context['title'] = '搜书: 搜索 ' + _context['kw'] + " 结果" ?>
+<table cellpadding="0" cellspacing="0" align="center" width="860">
+
+    <tr>
+        <td class="bt" width="180" style="font-size: 15px;"> &nbsp;&nbsp;&nbsp;<b>搜索结果</b></td>
+        <td class="bt" width="380" style="font-size: 15px;">最新章节</td>
+        <td class="bt" width="100" style="font-size: 15px;">作者</td>
+        <td class="bt" width="200" style="font-size: 15px;">更新时间</td>
+    </tr>
+
+    <?py if 'books' in _context and _context['books']: ?>
+    <?py for book in _context['books']: ?>
+    <tr>
+        <td class="xt" style="font-size: 15px;"> &nbsp;&nbsp;&nbsp;<a target="blank" href="/book/${book['_id']}">${book['name']}</a></td>
+        <?py newest_sec = "无" ?>
+        <?py if 'newest_sec' in book: ?>
+        <?py newest_sec = book['newest_sec'] ?>
+        <?py #endif ?>
+        <td class="xt" style="font-size: 15px;"><a href="/book/${book['_id']}">${newest_sec}</a></td>
+        <td class="xt" style="font-size: 15px;">${book['author']}</td>
+        <?py update_time = now_time ?>
+        <?py if 'update_time' in book: ?>
+        <?py update_time = book['update_time'] ?>
+        <?py #endif ?>
+        <td class="xt" style="font-size: 15px;">${update_time}</td>
+    </tr>
+    <?py #endfor ?>
+    <?py else: ?>
+    <td class="xt" colspan="4" style="font-size: 15px;">未找到结果</td>
+    <?py #endif ?>
+</table>

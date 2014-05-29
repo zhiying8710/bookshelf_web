@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//service/book_service.py=utf-8
+encoding//service/section_service.py=utf-8
+encoding//service/user_service.py=utf-8
+encoding//utils/common.py=utf-8
+encoding//utils/conns_helper.py=utf-8
+encoding//utils/settings.py=utf-8
+encoding//web/__init__.py=utf-8
+encoding//web/handlers.py=utf-8
+encoding/tornado_main.py=utf-8

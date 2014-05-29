@@ -1,0 +1,19 @@
+<link   rel="Shortcut   Icon"   href="/static/imgs/favicon.ico">
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        var err_code = ${_context['err_code']};
+        switch(err_code) {
+            case 404:
+                alert('页面没有找到.');
+                break;
+            case 500:
+                alert('服务器发生错误, 请稍后再试.');
+                break;
+            default:
+                alert('请求发生错误.');
+                break;
+        }
+        window.document.location = "/";
+    });
+</script>

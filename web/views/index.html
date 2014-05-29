@@ -1,0 +1,119 @@
+<?py _context['title'] = '搜书: 最全的小说收录网站' ?>
+<?py temp_ = '' ?>
+<?py if not 'curr_user' in _context: ?>
+<?py temp_ = '临时' ?>
+<?elif 'is_cookie' in _context['curr_user'] and _context['curr_user']['is_cookie']: ?>
+<?py temp_ = '临时' ?>
+<?py #endif ?>
+<div id="fav_content" style="font-size: 14px;">
+    <form action="" id="shelf_frm" method="post">
+        <table width="860" align="center" cellpadding="0" cellspacing="0"  style="background-color: #ffffff">
+            <tbody>
+                <tr>
+                    <td width="180" class="bt" style="font-size: 14px;"> &nbsp;&nbsp;&nbsp;<b>我的${temp_}书架</b></td>
+                    <td class="bt" width="280" style="font-size: 14px;">最新章节</td>
+                    <td class="bt" width="100" style="font-size: 14px;">作者</td>
+                    <td class="bt" width="150" style="font-size: 14px;">更新时间</td>
+                </tr>
+                <?py if 'user_books' in _context and _context['user_books']: ?>
+                <?py for book in _context['user_books']: ?>
+                <tr height="" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">
+                    <td class="xt" style="padding-left: 16px; font-size: 14px;">&nbsp;
+                    <input class="checkit" type="checkbox" name="u_books" value="#{book['_id']}">
+                    &nbsp; <a href="/book/#{book['_id']}">#{book['name']}</a></td>
+                    <?py newest_sec = '无' ?>
+                    <?py if 'newest_sec' in book: ?>
+                    <?py newest_sec = book['newest_sec'] ?>
+                    <?py #endif ?>
+                    <td class="xt" style="font-size: 14px;"><a href="/book/#{book['_id']}">${newest_sec}<span style="color: red;" class="update_count" val="#{book['_id']}"><span></a></td>
+                    <td class="xt" style="font-size: 14px;">${book['author']}</td>
+                    <?py update_time = now_time ?>
+                    <?py if 'update_time' in book: ?>
+                    <?py newest_sec = book['update_time'] ?>
+                    <?py #endif ?>
+                    <td class="xt" style="font-size: 14px;">${update_time}</td>
+                </tr>
+                <?py #endfor ?>
+                <?py else: ?>
+                <tr height="30" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">
+                    <td class="xt" colspan="5" style="font-size: 14px;text-align: center;">暂无收藏</td>
+                </tr>
+                <?py #endif ?>
+                <tr>
+                    <td align="center" colspan="5" style="font-size: 14px;">
+                    <input name="removetmp_v2" type="button" value="下架" onclick="un_favo();">
+                    &nbsp;&nbsp;
+                    <input name="cleartmp_v2" type="button" value="清空书架" onclick="return confirm_clean('确实要清空书架么?')">
+                    &nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:void(0);" onclick="selectall();">全选</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="selectleft();">反选</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <br>
+</div>
+<br>
+<div id="new_content" style="font-size: 14px;">
+    <p></p>
+    <table cellpadding="0" cellspacing="0" align="center" width="860">
+        <tbody>
+            <tr>
+                <td class="bt" width="200" style="font-size: 14px;"> &nbsp;&nbsp;&nbsp;<b>最近更新</b></td><td class="bt" width="422" style="font-size: 14px;">最新章节</td><td class="bt" width="150" style="font-size: 14px;">更新时间</td><iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
+            </tr>
+            <?py if 'books_page' in _context and _context['books_page']['books']: ?>
+            <?py for book in _context['books_page']['books']: ?>
+            <tr style="background: white;">
+                <td class="xt" style="font-size: 14px;">&nbsp;&nbsp;&nbsp;<a href="/book/#{book['_id']}">#{book['name']}</a></td>
+                <?py newest_sec = "无" ?>
+                <?py if 'newest_sec' in book: ?>
+                <?py newest_sec = book['newest_sec'] ?>
+                <?py #endif ?>
+                <td class="xt" style="font-size: 14px;"><a href="/book/#{book['_id']}">${newest_sec}</a></td>
+                <?py update_time = now_time ?>
+                <?py if 'update_time' in book: ?>
+                <?py update_time = book['update_time'] ?>
+                <?py #endif ?>
+                <td class="xt" style="font-size: 14px;">${update_time}</td>
+            </tr>
+            <?py #endfor ?>
+            <?py #endif ?>
+        </tbody>
+    </table>
+    <br>
+    <table align="center" width="760">
+        <tbody>
+            <tr>
+                <td align="center" style="font-size: 14px;">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td width="100%" height="100%" align="right" style="font-size: 14px;">
+                            <p style="font-size:14px">
+                                <?py if 'books_page' in _context: ?>
+                                    <?py if _context['books_page']['curr_page'] == 1: ?>
+                                        <a href="javascript:void(0);">[上一页]</a>
+                                    <?py else: ?>
+                                        <a href="/${_context['books_page']['curr_page'] - 1}">[上一页]</a>
+                                    <?py #endif ?>
+
+                                    <?py for p in xrange(1, _context['books_page']['total_page'] + 1): ?>
+                                        <a href="/${p}">[${p}]</a>&nbsp;
+                                    <?py #endfor ?>
+
+                                    <?py if _context['books_page']['curr_page'] == _context['books_page']['total_page']: ?>
+                                        <a href="javascript:void(0);">[下一页]</a>
+                                    <?py else: ?>
+                                        <a href="/${_context['books_page']['curr_page'] + 1}">[下一页]</a>
+                                    <?py #endif ?>
+                                <?py else: ?>
+                                    <a href="javascript:void(0);">[上一页]</a>
+                                    <a href="/1">[1]</a>
+                                    <a href="javascript:void(0);">[下一页]</a>
+                                <?py #endif ?>
+                            </p></td>
+                        </tr>
+                    </tbody>
+                </table></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

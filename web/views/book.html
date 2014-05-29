@@ -1,0 +1,66 @@
+<?py _context['title'] = '搜书: ' + _context['book']['name'] ?>
+<div align="center" style="font-size: 14px;">
+    <div class="" style="height: 60px;line-height: 60px;font-size: 22px;font-weight: bold;text-align: center;">
+        ${_context['book']['name']}<span style="font-size: 13px;font-weight: normal;padding-left: 5px;color: #6d6d6d;">${_context['book']['author']}</span>
+    </div>
+    <div style="padding-left:20px;padding-right:10px;text-align:left;width:840px;" align="center">
+        简介:${_context['book']['desc']}
+        <br/>
+        <br/>
+        <?py if 'author_books' in _context and _context['author_books']: ?>
+        <div style="line-height:25px;">
+            ${_context['book']['author']}的其他作品:
+            <?py for o_book in _context['author_books']: ?>
+            <a href="/book/${o_book['_id']}" style="color:red"> 《${o_book['name']}》 </a>&nbsp;
+            <?py #endfor ?>
+        </div>
+        <?py #endif ?>
+    </div>
+</div>
+
+<table cellpadding="0" cellspacing="0" align="center" width="860">
+
+    <tbody>
+        <tr height="28">
+            <td class="bt" style="font-size: 14px;">&nbsp;&nbsp; <b>《${_context['book']['name']}》最新章节(<a href="javascript:void(0);" onclick="add_favo('${_context['book']['_id']}');">收藏本书</a>)</b>&nbsp;
+            <td class="bt" width="138" style="font-size: 14px;">更新网站</td>
+            <td class="bt" width="168" style="font-size: 14px;">最新更新时间</td>
+        </tr>
+        <?py if 'sections_page' in _context and _context['sections_page']['sections']: ?>
+        <?py for section in _context['sections_page']['sections']: ?>
+        <tr height="30" class="site_2" style="background: white;">
+            <?py color='black' ?>
+            <?py first='' ?>
+            <?py if section['is_source']: ?>
+            <?py color='red' ?>
+            <?py first='[首发]' ?>
+            <?py #endif ?>
+            <td class="xt" style="font-size: 14px;">&nbsp;&nbsp;<a href="${section['url']}" target="_blank"> <span style="color:${color};">${section['name']}</span></a></td>
+            <td class="xt" style="font-size: 14px;"><a href="/book/${_context['book']['_id']}/page/1/${section['source_short_name']}" style="color:${color};">${section['source_zh_name']}${first}</a></td>
+            <td class="xt" style="font-size: 14px;">${section['crawl_time']}</td>
+        </tr>
+        <?py #endfor ?>
+        <?py else: ?>
+        <tr height="30" class="site_2" style="background: white;">
+            <td class="xt" style="font-size: 14px;text-align:center" colspan="3">该页无数据</td>
+        </tr>
+        <?py #endif ?>
+        <tr>
+            <?py site='' ?>
+            <?py if _context['site']: ?>
+            <?py site='/' + _context['site'] ?>
+            <?py #endif ?>
+            <td colspan="3" style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;
+                <?py if 'prev_page' in sections_page: ?>
+                <a href="/book/${_context['book']['_id']}/page/${sections_page['prev_page']}${site}">[上一页]</a>
+                <?py #endif ?>
+                <?py if 'prev_page' in sections_page or 'next_page' in sections_page: ?>
+                [${sections_page['curr_page']}]
+                <?py #endif ?>
+                <?py if 'next_page' in sections_page: ?>
+                <a href="/book/${_context['book']['_id']}/page/${sections_page['next_page']}${site}">[下一页]</a>
+                <?py #endif ?>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,28 @@
+<?py _context['title'] = '搜书: 注册/登陆' ?>
+<div style="">
+<form method="post" action="/authority" id="login_reg" onsubmit="return false;">
+    <div style="text-align: center;">
+        <span style="font-size: 14px;" align="left">用户名:
+            <input name="user_name" type="text" placeholder="建议使用邮箱名" id="user_name">
+        </span>
+        <span style="font-size: 14px;" align="left">密码:
+            <input name="pass_word" type="password" id="pass_word" />
+        </span>
+        <span style="font-size: 14px;" align="left">记住我
+            <select name="saveme" style="WIDTH: 100">
+                <option value="365" selected="selected">一年</option>
+                <option value="0">不要记住</option>
+                <option value="1">一天</option>
+                <option value="7">一周</option>
+                <option value="30">一月</option>
+            </select>
+        </span>
+        <span style="font-size: 14px;" align="left">
+            <input type="button" value="注册/登陆" onclick="login_reg_func();">
+        </span>
+    </div>
+    <div style="text-align: center;color: green;">
+        如您没有本站账号, 直接使用您想使用的账号进行登陆, 本站将自动为您生成账号信息.
+    </div>
+</form>
+</div>

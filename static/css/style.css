@@ -1,0 +1,168 @@
+@CHARSET "UTF-8";
+td {font-size:14px; line-height:180%;}
+.xt{font-size:14px;line-height:180%; border-bottom:1px #bbbbbb dashed;font-family:"宋体", "arial", "ms sans serif";}
+.bt{font-size:14px;line-height:180%; border-bottom:1px #bbbbbb solid;font-family:"宋体", "arial", "ms sans serif";}
+.inp{font-size:11pt; height: 30px;}
+.bd{border:1px solid #bbbbbb;}
+a:hover {color:#008000; text-decoration: underline}
+a {color:#008000;text-decoration: none}
+body {margin-top:0px;margin-right:0px;margin-bottom:0px;}
+h1 {font-size:22px;line-height:180%;margin:0px;padding: 0px;color: #cc0000;}
+p {font-size:10.5pt;line-height:180%;}
+input{font-size:11pt;height:25px;vertical-align: middle;}
+div,form,img,ul,li,img{margin:0; padding:0; border:0;}
+table{background-color:#ffffff;}
+
+body {font-family:"微软雅黑",arial;FONT-SIZE:14px;margin:0}
+select {font-family:arial;FONT-SIZE:14px;}
+table {border-collapse:collapse;border:0;padding:0px;}
+td {font-family:"微软雅黑",arial;FONT-SIZE:14px;LINE-HEIGHT:18px;padding:3px;margin:0px;}
+.bn {FONT-SIZE: 18pt;color:#FF6666;font-family:"微软雅黑",隶书}
+.s {border-bottom:1px #eeeeee solid;}
+.t {border-bottom:1px #eeeeee solid;text-align:center;}
+.i {height:18px;WIDTH:20px;font-family:arial;FONT-SIZE:9pt;}
+#AddFavorite{height:20px}
+a.buy:link {COLOR: #ff6655; TEXT-DECORATION: none}
+a.buy:active {COLOR: #ff6655; TEXT-DECORATION: none}
+a.buy:visited {COLOR: #ff6655; TEXT-DECORATION: none}
+a.buy:hover {COLOR: blue; TEXT-DECORATION: underline;}
+a.gone:link {COLOR: #cccccc; TEXT-DECORATION: none}
+a.gone:active {COLOR: #cccccc; TEXT-DECORATION: none}
+a.gone:visited {COLOR: #cccccc; TEXT-DECORATION: none}
+a.gone:hover {COLOR: blue; TEXT-DECORATION: underline;}
+.softred{color:#CC6600;}
+
+#shujia {
+background-image:url('../images/shujia.gif');
+background-repeat:no-repeat;
+POSITION: absolute;
+LEFT: 1000px;
+WIDTH: 30px;
+TOP: 100px;
+HEIGHT: 100px;
+display:none;
+/*display:none;*/
+}
+#addiv {
+background-image:url('../images/9590386_2.gif?date=0510');
+background-repeat:no-repeat;
+POSITION: absolute;
+LEFT: 1300px;
+WIDTH: 120px;
+TOP: 200px;
+HEIGHT: 600px;
+display:block;
+/*display:none;*/
+}
+#addiv2 {
+background-repeat:no-repeat;
+POSITION: absolute;
+LEFT: 1500px;
+WIDTH: 120px;
+TOP: 200px;
+HEIGHT: 600px;
+display:block;
+/*display:none;*/
+}
+.middiv{
+    margin:0 auto;
+    width:600px;
+}
+#container{
+    background-image: url(/static/imgs/nav-back.jpg);
+    background-repeat:repeat-x;
+    width:840px;
+    margin:0 auto;
+}
+
+#navMenu {
+    overflow:hidden;
+    height: 28px;
+    padding:8px 0 0 10px;
+}
+#navMenu ul {
+    float:left;
+    height: 22px;
+    list-style: none;
+}
+#navMenu ul li {
+    font:14px/1.5 "Microsoft YaHei","微软雅黑","Microsoft JhengHei","宋体";
+    float:left;
+    height: 22px;
+    margin-right: 10px;
+    margin-left: -3px;
+    padding-left: 10px;
+    padding-top: 0px;
+    margin-top:0px;
+}
+#navMenu ul li a {
+    color: #FFFfff;
+    height: 22px;
+    text-decoration:none;
+    display: inline-block;
+    position: relative;
+}
+#navMenu ul li a.hover {
+    color:#DEFF01;
+    height: 22px;
+    text-decoration:none;
+    display: inline-block;
+    position: relative;
+}
+
+#navMenu ul li span {
+    cursor:pointer;
+    display:inline-block;
+    height:22px;
+    line-height:20px;
+    margin:0 0 0 5px;
+    padding:0 5px 0 0;
+    text-align:center;
+    vertical-align:middle;
+    font-weight:bold;
+    /*color:#ebf5e9;*/
+    color:#ffffff;
+}
+#navMenu ul li.hover {
+    padding-top:0;
+}
+#navMenu ul li.hover a {
+    display: inline-block;
+    position: relative;
+}
+#navMenu ul li.hover span {
+    cursor:pointer;
+    display:inline-block;
+    height:22px;
+    line-height:20px;
+    margin:0 0 0 5px;
+    padding:0 5px 0 0;
+    text-align:center;
+    vertical-align:middle;
+}
+#navMenu ul li a.hover, #navMenu ul li a:hover {
+    text-decoration:none;
+    color:#DEFF01;
+    display: inline-block;
+    position: relative;
+}
+#navMenu ul li a.hover span, #navMenu ul li a:hover span {
+    cursor:pointer;
+    display:inline-block;
+    height:22px;
+    color:#DEFF01;
+    line-height:20px;
+    margin:0 0 0 5px;
+    padding:0 5px 0 0;
+    text-align:center;
+    vertical-align:middle;
+}
+.floatright{
+}
+
+.standdiv{
+    width:860px;
+    margin:0 auto;
+}
+
+.bookinfo{width:820px;padding:10px;border:1px solid green;-moz-box-shadow:3px 3px 4px green;-webkit-box-shadow:3px 3px 4px green;box-shadow:3px 3px 4px green;background:#fff;filter:progid:DXImageTransform.Microsoft.Shadow(Strength=4,Direction=135,Color='green');}

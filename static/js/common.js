@@ -1,3 +1,27 @@
+$.ajaxSetup({
+    error : function(xhr, textStatus, error) {
+        var err_code = xhr.status;
+        switch (err_code) {
+        case 404:
+            alert('页面没有找到.');
+            break;
+        case 500:
+            alert('服务器发生错误, 请稍后再试.');
+            break;
+        case 405:
+            alert('缺少必须的请求参数.');
+            break;
+        default:
+            alert('请求发生错误.');
+            break;
+        }
+    },
+    beforeSend : function(xhr) {
+        if (!(document.cookie || navigator.cookieEnabled)) {
+            alert('您的浏览器关闭了cookie功能, 这样可能会影响您在本站的体验.');
+        }
+    }
+});
 function un_favo() {
     if (!$(':checked').length) {
         return false;
@@ -101,6 +125,44 @@ function login_reg_func() {
             }
             if (data['code'] == 3) {
                 alert("密码错误");
+                return;
+            }
+        }
+    });
+}
+
+function add_bookinfo_func() {
+    var book_name = $('#book_name').val();
+    if (!book_name || !$.trim(book_name)) {
+        alert("小说名不能为空");
+        return false;
+    }
+    $('#book_name').val($.trim(book_name));
+    $.post("/common/bookinfo/save", $("#add_bookinfo").serialize(), function(data) {
+        data = eval("(" + data + ")");
+        if (data['succ']) {
+            alert('提交成功');
+            window.document.location.reload();
+        } else {
+            if (data['code'] == 0) {
+                alert("小说名或首发站不能为空");
+                return;
+            }
+            if (data['code'] == 1) {
+                alert("请不要提交本站不支持的首发站点.");
+                return;
+            }
+            if (data['code'] == 2) {
+                alert("提交失败, 请稍后再试");
+                return;
+            }
+            if (data['code'] == 3) {
+                alert("本书已收录");
+                window.document.location = '/book/' + data['b_id']
+                return;
+            }
+            if (data['code'] == 4) {
+                alert("请勿重复提交");
                 return;
             }
         }

@@ -20,7 +20,7 @@ settings = {
 application = tornado.web.Application([
     (r"/([0-9]*)", MainHandler),
     (r"/authority/?([a-zA-Z0-9]*)", LoginRegHandler),
-    (r"/common/([a-zA-Z][a-zA-Z0-9]+)", CommonHandler),
+    (r"/common/([a-zA-Z][a-zA-Z0-9]+)/?([a-zA-Z0-9]*)", CommonHandler),
     (r"/shelf", ShelfHandler),
     (r"/book/([a-zA-Z0-9]+)/?([a-zA-Z]*)/?([a-zA-Z0-9/]*)", BookHandler),
     (r"/user/([a-zA-Z0-9]+)/?([a-zA-Z0-9]*)", UserHandler),

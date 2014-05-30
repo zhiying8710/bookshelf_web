@@ -10,6 +10,9 @@
             case 500:
                 alert('服务器发生错误, 请稍后再试.');
                 break;
+            case 405:
+                alert('缺少必须的请求参数.');
+                break;
             default:
                 alert('请求发生错误.');
                 break;

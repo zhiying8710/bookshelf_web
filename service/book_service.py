@@ -87,3 +87,14 @@ class BookService():
     def search(self, kw, mongo=None):
         books_cursor = mongo.bookshelf.books.find({'$or' : [{'name' : {'$regex' : kw}}, {'author' : {'$regex' : kw}}]})
         return self.gene_book_page(1, 0, 0, books_cursor)['books']
+
+    @mongo_exec(mongo=MongoHelper.get_mongo())
+    def find_book_by_info(self, book_info, mongo=None):
+        author = book_info['author']
+        source = book_info['source']
+        conditions = {'name' : book_info['name'], 'source_short_name' : book_info['source_short_name']}
+        if author:
+            conditions['author'] = author
+        if source:
+            conditions['source'] = source
+        return mongo.bookshelf.books.find_one(conditions)

@@ -16,6 +16,7 @@ max_all_books_page = 20
 book_sections_size = 50
 
 user_favos_update_counts_key_prefix = '__user_favos_update_counts_'
+unrecord_book_info_queue_key = '__unrecord_book_info_queue'
 
 SESSION_MAXLIFETIME = 30 * 60
 SESSION_REDIS_DB = 1

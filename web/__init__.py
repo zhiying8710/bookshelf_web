@@ -19,12 +19,6 @@ tenjin_engine = tenjin.Engine(pp=[ tenjin.TrimPreprocessor() ], layout=os.path.j
 
 class BaseHandler(RequestHandler):
 
-    CODE_NAME_PWD_EMPTY = 0
-    CODE_AUTO_REG_SUCC = 1
-    CODE_AUTO_REG_FAIL = 2
-    CODE_LOGIN_SUCC = 2
-    CODE_LOGIN_PWD_ERR = 3
-
     MTHOD_NOT_ALLOWED = 405
     URL_NOT_FOUND = 404
     SERVER_ERROR = 500
@@ -150,7 +144,8 @@ def auto_login():
             user = request.__get_session_attr__('user')
             if not user:
                 user_id = request.get_secure_cookie('user_id')
-                if user_id:
+                save_me = request.get_secure_cookie('save_me')
+                if user_id and save_me:
                     user = request.user_service.find_by_id(user_id)
                     if user:
                         request.__set_session_attr__('user', user)

@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//service/book_service.py=utf-8
+encoding//service/common_service.py=utf-8
 encoding//service/section_service.py=utf-8
 encoding//service/user_service.py=utf-8
 encoding//utils/common.py=utf-8

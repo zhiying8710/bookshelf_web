@@ -7,24 +7,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="/static/css/style.css" type="text/css" rel="stylesheet">
         <script type="text/javascript" src="/static/js/jquery.min.js"></script>
-        <script type="text/javascript">
-            $.ajaxSetup({
-                error: function(xhr, textStatus, error) {
-                    var err_code = xhr.status;
-                    switch(err_code) {
-                        case 404:
-                            alert('页面没有找到.');
-                            break;
-                        case 500:
-                            alert('服务器发生错误, 请稍后再试.');
-                            break;
-                        default:
-                            alert('请求发生错误.');
-                            break;
-                    }
-                }
-            });
-        </script>
         <script type="text/javascript" src="/static/js/common.js"></script>
     </head>
     <body>
@@ -55,10 +37,10 @@
                     </li>
                     <!-- <li>
                         <a href="/support"><span>支持本站</span></a>
-                    </li> -->
+                    </li>
                     <li>
                         <a href="/about"><span>关于本站</span></a>
-                    </li>
+                    </li> -->
                     <li>
                         <?py if 'curr_user' in _context and _context['curr_user'] and not _context['curr_user']['is_cookie']: ?>
                         <span style="color: white;">欢迎您, ${_context['curr_user']['user_name']}&nbsp;&nbsp;</span> <a href="/authority/logout"><span>退出</span></a>
@@ -68,8 +50,14 @@
                     </li>
                 </ul>
             </div>
-            <div style="text-align: center; color: green;">
-                本站为未登陆用户提供书架支持, 用户浏览器必须开启cookie, 当用户注册或登陆后, 将自动将临时书架同步到永久书架.<br/><br/>
+            <div style="color: green;">
+                <br/>
+                ★  本站为未登陆用户提供书架支持, 用户浏览器必须开启cookie, 当用户注册或登陆后, 将自动将临时书架同步到永久书架.<br/>
+                ★  若在本站搜索不到您要的小说, 请点击<a style="color:red;" href="/common/bookinfo">--->这里<---</a>提交小说信息, 我们将在第一时间进行收录.</a><br/>
+                ★  若您希望收录其他的小说更新网站, 请点击<a style="color:red;" href="/common/siteinfo">--->这里<---</a>提交网站信息, 我们将在第一时间进行收录.</a><br/>
+                ★ 页面广告是本站的运维所需花费的唯一来源, 不开启任何广告屏蔽软件就是对本站最大的支持, 本站承诺广告不会对您的体验带来任何影响.
+                <div style="border-bottom: 1px #bbbbbb dashed;">&nbsp;</div>
+                <br/>
             </div>
         </div>
         #{_content}

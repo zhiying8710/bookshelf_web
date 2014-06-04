@@ -10,7 +10,7 @@ import os
 from utils.common import _base64
 import tornado
 from web.handlers import MainHandler, LoginRegHandler, CommonHandler,\
-    ShelfHandler, BookHandler, UserHandler, ErrHandler, SearchHandler
+    ShelfHandler, BookHandler, UserHandler, ErrHandler, RankHandler
 
 settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static"),
@@ -24,7 +24,7 @@ application = tornado.web.Application([
     (r"/shelf", ShelfHandler),
     (r"/book/([a-zA-Z0-9]+)/?([a-zA-Z]*)/?([a-zA-Z0-9/]*)", BookHandler),
     (r"/user/([a-zA-Z0-9]+)/?([a-zA-Z0-9]*)", UserHandler),
-    (r"/search", SearchHandler),
+    (r"/rank", RankHandler),
     (r"/.+", ErrHandler),
 ], **settings)
 

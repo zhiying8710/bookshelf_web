@@ -1,0 +1,123 @@
+<?py _context['title'] = '搜书: 排行榜' ?>
+<div style="width: 840px; margin: 0px auto; font-size: 14px;">
+    <div class="rdoc" style="font-size: 14px;">
+        <div class="title" style="font-size: 14px;font-weight: bold;">
+            周点击排行榜
+        </div>
+        <div class="content" style="font-size: 14px;">
+            <ul>
+                <?py if _context['week_cpc_books']: ?>
+                <?py for book in _context['week_cpc_books']: ?>
+                <li>
+                    <a href="/book/${book['_id']}">${book['name']}</a>
+                </li>
+                <?py #endfor ?>
+                <?py else: ?>
+                <li>
+                    暂无
+                </li>
+                <?py #endif ?>
+            </ul>
+        </div>
+    </div>
+    <div class="rdoc" style="font-size: 14px;">
+        <div class="title" style="font-size: 14px;font-weight: bold;">
+            月点击排行榜
+        </div>
+        <div class="content" style="font-size: 14px;">
+            <ul>
+                <?py if _context['month_cpc_books']: ?>
+                <?py for book in _context['month_cpc_books']: ?>
+                <li>
+                    <a href="/book/${book['_id']}">${book['name']}</a>
+                </li>
+                <?py #endfor ?>
+                <?py else: ?>
+                <li>
+                    暂无
+                </li>
+                <?py #endif ?>
+            </ul>
+        </div>
+    </div>
+    <div class="rdoc" style="font-size: 14px;">
+        <div class="title" style="font-size: 14px;font-weight: bold;">
+            总点击排行榜
+        </div>
+        <div class="content" style="font-size: 14px;">
+            <ul>
+                <?py if _context['alldays_cpc_books']: ?>
+                <?py for book in _context['alldays_cpc_books']: ?>
+                <li>
+                    <a href="/book/${book['_id']}">${book['name']}</a>
+                </li>
+                <?py #endfor ?>
+                <?py else: ?>
+                <li>
+                    暂无
+                </li>
+                <?py #endif ?>
+            </ul>
+        </div>
+    </div>
+    <div class="rdoc" style="font-size: 14px;">
+        <div class="title" style="font-size: 14px;font-weight: bold;">
+            周收藏排行榜
+        </div>
+        <div class="content" style="font-size: 14px;">
+            <ul>
+                <?py if _context['week_favo_books']: ?>
+                <?py for book in _context['week_favo_books']: ?>
+                <li>
+                    <a href="/book/${book['_id']}">${book['name']}</a>
+                </li>
+                <?py #endfor ?>
+                <?py else: ?>
+                <li>
+                    暂无
+                </li>
+                <?py #endif ?>
+            </ul>
+        </div>
+    </div>
+    <div class="rdoc" style="font-size: 14px;">
+        <div class="title" style="font-size: 14px;font-weight: bold;">
+            月收藏排行榜
+        </div>
+        <div class="content" style="font-size: 14px;">
+            <ul>
+                <?py if _context['month_favo_books']: ?>
+                <?py for book in _context['month_favo_books']: ?>
+                <li>
+                    <a href="/book/${book['_id']}">${book['name']}</a>
+                </li>
+                <?py #endfor ?>
+                <?py else: ?>
+                <li>
+                    暂无
+                </li>
+                <?py #endif ?>
+            </ul>
+        </div>
+    </div>
+    <div class="rdoc" style="font-size: 14px;">
+        <div class="title" style="font-size: 14px;font-weight: bold;">
+            总收藏排行榜
+        </div>
+        <div class="content" style="font-size: 14px;">
+            <ul>
+                <?py if _context['alldays_favo_books']: ?>
+                <?py for book in _context['alldays_favo_books']: ?>
+                <li>
+                    <a href="/book/${book['_id']}">${book['name']}</a>
+                </li>
+                <?py #endfor ?>
+                <?py else: ?>
+                <li>
+                    暂无
+                </li>
+                <?py #endif ?>
+            </ul>
+        </div>
+    </div>
+</div>

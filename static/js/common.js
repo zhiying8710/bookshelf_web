@@ -168,3 +168,37 @@ function add_bookinfo_func() {
         }
     });
 }
+
+function add_siteinfo_func() {
+    var site_url = $('#site_url').val();
+    if (!site_url || !$.trim(site_url)) {
+        alert("小说更新站点网址不能为空");
+        return false;
+    }
+    $('#site_url').val($.trim(site_url));
+    $.post("/common/siteinfo/save", $("#add_siteinfo").serialize(), function(data) {
+        data = eval("(" + data + ")");
+        if (data['succ']) {
+            alert('提交成功');
+            window.document.location.reload();
+        } else {
+            if (data['code'] == 0) {
+                alert("小说更新站点网址不能为空");
+                return;
+            }
+            if (data['code'] == 2) {
+                alert("提交失败, 请稍后再试");
+                return;
+            }
+            if (data['code'] == 4) {
+                alert("请勿重复提交");
+                return;
+            }
+        }
+    });
+}
+
+function search_kw(kw) {
+    $('#soso').val(kw);
+    $('#sea_kw').submit();
+}

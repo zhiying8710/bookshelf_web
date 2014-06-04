@@ -5,7 +5,7 @@ td {font-size:14px; line-height:180%;}
 .inp{font-size:11pt; height: 30px;}
 .bd{border:1px solid #bbbbbb;}
 a:hover {color:#008000; text-decoration: underline}
-a {color:#008000;text-decoration: none}
+a {color:#008000;text-decoration: none;cursor: pointer;}
 body {margin-top:0px;margin-right:0px;margin-bottom:0px;}
 h1 {font-size:22px;line-height:180%;margin:0px;padding: 0px;color: #cc0000;}
 p {font-size:10.5pt;line-height:180%;}
@@ -166,3 +166,46 @@ display:block;
 }
 
 .bookinfo{width:820px;padding:10px;border:1px solid green;-moz-box-shadow:3px 3px 4px green;-webkit-box-shadow:3px 3px 4px green;box-shadow:3px 3px 4px green;background:#fff;filter:progid:DXImageTransform.Microsoft.Shadow(Strength=4,Direction=135,Color='green');}
+.rdoc{
+    width:230px;
+    float:left;
+    border-bottom:1px solid #C5DDBC;
+    border-left:1px solid #C5DDBC;
+    overflow:hidden;
+
+    margin-bottom:10px;
+    margin-right:5px;
+    margin-left:5px;
+
+}
+.rdoc .title{
+    padding:5px 7px 0px 8px;
+    height:25px;
+    background:url(http://www.621m.cn/search/spic/mbox-tbg.png) right top no-repeat;
+    overflow:hidden;
+    clear:both;
+    margin-top:0px;
+    color:#226666;
+
+}
+
+.content
+{
+    font-size:12px;line-height:22px;
+    border-top:0px solid #C5DDBC;
+    border-bottom:1px solid #C5DDBC;
+    border-left:1px solid #C5DDBC;
+    border-right:1px solid #C5DDBC;
+    line-height:0.6cm;
+    overflow:hidden;
+    word-break:break-all;
+    padding-left:5px;
+}
+.title a:link { color: #226666; font-weight:bold; text-decoration: none}
+.title a:visited { color: #226666; text-decoration: none}
+.title a:hover { color: #aaa; text-decoration: underline}
+.title a:active { color: #aaa; text-decoration: underline}
+
+.content ul{
+    line-style:none;
+}

@@ -1,0 +1,25 @@
+<?py _context['title'] = '搜书: 提交未收录小说更新网站信息' ?>
+<div style="">
+<form method="post" action="/commom/siteinfo/save" id="add_siteinfo" onsubmit="return false;">
+    <div style="text-align: center;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 40%; text-align: right;">小说更新站点网址: </td>
+                <td style="width: 60%; text-align: left;">
+                    <span style="font-size: 14px;" align="left">
+                        <input name="site_url" type="text" placeholder="小说更新站点网址" id="site_url">
+                    </span>
+                    <span style="color:red;">* 必填</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <span style="font-size: 14px;" align="left">
+                        <input type="button" value="提交" onclick="add_siteinfo_func();">
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+</div>

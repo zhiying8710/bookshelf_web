@@ -6,8 +6,6 @@
         <link   rel="Shortcut   Icon"   href="/static/imgs/favicon.ico">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="/static/css/style.css" type="text/css" rel="stylesheet">
-        <script type="text/javascript" src="/static/js/jquery.min.js"></script>
-        <script type="text/javascript" src="/static/js/common.js"></script>
     </head>
     <body>
         <table cellpadding="0" cellspacing="0" align="center" width="860">
@@ -15,15 +13,28 @@
                 <tr height="70px">
                     <td width="188" valign="middle" align="center" style="font-size: 14px;"> &nbsp;&nbsp;<a href="/"><img src="/static/imgs/logo.gif" height="62" width="155" alt="搜书"></a></td>
                     <td valign="top" style="font-size: 14px;"> &nbsp;
-                    <form action="/search" method="post">
+                    <form action="/" id="sea_kw" method="post">
                         <?py kw = "" ?>
                         <?py if 'kw' in _context: ?>
                         <?py kw = _context['kw'] ?>
                         <?py #endif ?>
                         <input name="kw" type="text" id="soso" placeholder="请输入书名/作者" value="${kw}" style="width:398px;height:25px;" class="inp" />
                         <input type="submit" value="小说搜索" style="height:35px" />
-                    </form></td>
+                    </form>
+                    </td>
                 </tr>
+                <?py if 'hot_kws' in _context and _context['hot_kws']: ?>
+                <tr>
+                    <td colspan="2" height="23px">
+                        <div style="float:right;width:77%">
+                        热门搜索:
+                        <?py for kw in _context['hot_kws']: ?>
+                        <a onclick="search_kw('${kw}');">${kw}</a>&nbsp;&nbsp;
+                        <?py #endfor ?>
+                        </div>
+                    </td>
+                </tr>
+                <?py #endif ?>
             </tbody>
         </table>
         <div id="container" style="font-size: 14px;">
@@ -35,6 +46,9 @@
                     <li>
                         <a href="/shelf"><span>我的书架</span></a>
                     </li>
+                    <li>
+                        <a href="/rank"><span>排行榜</span></a>
+                    </li>
                     <!-- <li>
                         <a href="/support"><span>支持本站</span></a>
                     </li>
@@ -45,6 +59,7 @@
                         <?py if 'curr_user' in _context and _context['curr_user'] and not _context['curr_user']['is_cookie']: ?>
                         <span style="color: white;">欢迎您, ${_context['curr_user']['user_name']}&nbsp;&nbsp;</span> <a href="/authority/logout"><span>退出</span></a>
                         <?py else: ?>
+                        ${_context['curr_user']['user_name']}
                         <a href="/authority"><span>登录/注册</span></a>
                         <?py #endif ?>
                     </li>
@@ -74,5 +89,7 @@
                 </tr>
             </tbody>
         </table>
+        <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/js/common.js"></script>
     </body>
 </html>

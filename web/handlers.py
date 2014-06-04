@@ -3,35 +3,44 @@
 # @author: binge
 
 from web import BaseHandler, auto_login, logout, except_err
-from service.book_service import BookService
 from utils.common import TimeHelper, _md5, _base64
 from service.section_service import SectionService
 from service.common_service import CommonService
+import tornado.web
+from utils import settings
 
 class MainHandler(BaseHandler):
 
     def initialize(self):
         BaseHandler.initialize(self)
-        self.book_service = BookService()
 
     @except_err()
     @auto_login()
     def get(self, curr_page=1):
-        context = {}
         if self.current_user:
-            context['curr_user'] = self.current_user
-            context['user_books'] = self.book_service.find_user_books(self.current_user['_id'])
+            self.context['user_books'] = self.book_service.find_user_books(self.current_user['_id'])
         else:
             user_id = self.get_secure_cookie('user_id')
             if user_id:
-                context['user_books'] = self.book_service.find_user_books(user_id)
+                self.context['user_books'] = self.book_service.find_user_books(user_id)
 
-        context['books_page'] = self.book_service.find_books_page(curr_page)
-        context['now_time'] = TimeHelper.time_2_str()
-        self.render('views/index', context=context)
+        self.context['books_page'] = self.book_service.find_books_page(curr_page)
+        self.context['now_time'] = TimeHelper.time_2_str()
+        self.render('views/index')
 
-    def post(self, curr_page=1):
-        self.get(curr_page)
+    @tornado.web.asynchronous
+    @except_err()
+    @auto_login()
+    def post(self, *args):
+        kw = self.get_argument('kw', None)
+        if not kw:
+            self.redirect('/')
+        else:
+            books = self.book_service.search(kw)
+            self.context['books'] = books
+            self.context['kw'] = kw
+            self.render('views/search')
+            self.book_service.record_search_kw(kw)
 
 class LoginRegHandler(BaseHandler):
 
@@ -42,7 +51,7 @@ class LoginRegHandler(BaseHandler):
     CODE_LOGIN_PWD_ERR = 3
 
     def initialize(self):
-        BaseHandler.initialize(self)
+        BaseHandler.initialize(self, init_context=False)
 
     @except_err()
     def post(self, *args):
@@ -66,7 +75,10 @@ class LoginRegHandler(BaseHandler):
                     result['code'] = self.CODE_AUTO_REG_FAIL
             else:
                 if _md5(pass_word) == user['pass_word']:
-                    user_id = user['_id']
+                    t_user_id = user['_id']
+                    if user_id and not user_id == t_user_id:
+                        self.user_service.append_favos_from_cookie_uid(t_user_id, user_id)
+                    user_id = t_user_id
                     result['succ'] = True
                     result['code'] = self.CODE_LOGIN_SUCC
                 else:
@@ -99,29 +111,25 @@ class ShelfHandler(BaseHandler):
 
     def initialize(self):
         BaseHandler.initialize(self)
-        self.book_service = BookService()
 
     @except_err()
     @auto_login()
     def get(self, *args):
-        context = {'now_time' : TimeHelper.time_2_str()}
         if self.current_user:
-            context['curr_user'] = self.current_user
-            context['user_books'] = self.book_service.find_user_books(self.current_user['_id'])
+            self.context['user_books'] = self.book_service.find_user_books(self.current_user['_id'])
         else:
             user_id = self.get_secure_cookie('user_id')
             if user_id:
-                context['user_books'] = self.book_service.find_user_books(user_id)
-        self.render("views/shelf", context=context)
+                self.context['user_books'] = self.book_service.find_user_books(user_id)
+        self.render("views/shelf")
 
-    def post(self):
+    def post(self, *args):
         self.get()
 
 class UserHandler(BaseHandler):
 
     def initialize(self):
-        BaseHandler.initialize(self)
-        self.book_service = BookService()
+        BaseHandler.initialize(self, init_context=False)
 
     def post(self, m, *args):
         self.get(m, *args)
@@ -137,16 +145,16 @@ class UserHandler(BaseHandler):
             else:
                 eval("self." + m + "(params)")
 
+    @tornado.web.asynchronous
     def favo(self, params):
         args = self.list_parms(params, self.URL_NOT_FOUND)
-        if not args:
-            return
         b_id = args[0]
         if self.current_user:
             user_id = self.current_user['_id']
         else:
             user_id = self.get_secure_cookie('user_id')
         self.ajax_result({'succ' : self.user_service.favo(user_id, b_id)})
+        self.book_service.record_book_favo(b_id)
 
     def unfavo(self, *args):
         bids = self.get_arguments('u_books')
@@ -173,21 +181,22 @@ class BookHandler(BaseHandler):
 
     def initialize(self):
         BaseHandler.initialize(self)
-        self.book_service = BookService()
         self.section_service = SectionService()
 
+    @tornado.web.asynchronous
     @except_err()
     @auto_login()
-    def get(self, _id=None, m=None, params=None):
+    def get(self, _id, m=None, params=None):
         if not m:
             self.page(_id, [])
+            self.book_service.record_book_cpc(_id)
         else:
             if not hasattr(self, m) or m in self._skip_attrs:
                 self.raise_http_error(self.URL_NOT_FOUND)
             else:
                 eval("self." + m + "(_id, params)")
 
-    def post(self,_id=None, m=None, params=None):
+    def post(self,_id, m=None, params=None):
         self.get(_id, m, params)
 
     def page(self, _id, params):
@@ -206,59 +215,65 @@ class BookHandler(BaseHandler):
             site = args[1]
         except:
             pass
-        context = {}
         if 'desc' in book:
             book['desc'] = _base64(book['desc'], e=False)
         else:
             book['desc'] = ''
-        context['book'] = book
-        context['author_books'] = self.book_service.find_author_books(book['author'])
-        context['site'] = site
-        if len(context['author_books']) == 1:
-            context['author_books'] = []
+        self.context['book'] = book
+        self.context['author_books'] = self.book_service.find_author_books(book['author'])
+        self.context['site'] = site
+        if len(self.context['author_books']) == 1:
+            self.context['author_books'] = []
         sections_page = self.section_service.find_sections_page_by_id_site(_id, site, curr_page)
-        context['sections_page'] = sections_page
+        self.context['sections_page'] = sections_page
         if self.current_user:
-            context['curr_user'] = self.current_user
+            self.context['curr_user'] = self.current_user
             self.user_service.clear_user_update_count(self.current_user['_id'], _id)
 
-        self.render('views/book', context=context)
+        self.render('views/book')
 
-class SearchHandler(BaseHandler):
+class RankHandler(BaseHandler):
 
     def initialize(self):
         BaseHandler.initialize(self);
-        self.book_service = BookService()
-
-    def get(self):
-        self.raise_http_error(self.MTHOD_NOT_ALLOWED)
 
     @except_err()
     @auto_login()
+    def get(self, *args):
+        week_cpc_books = self.book_service.get_rank_books(settings.books_cpc_week_key_prefix + TimeHelper.get_week_no())
+        month_cpc_books = self.book_service.get_rank_books(settings.books_cpc_month_key_prefix + TimeHelper.get_month())
+        alldays_cpc_books = self.book_service.get_rank_books(settings.books_cpc_alldays_key)
+        week_favo_books = self.book_service.get_rank_books(settings.books_favo_week_key_prefix + TimeHelper.get_week_no())
+        month_favo_books = self.book_service.get_rank_books(settings.books_favo_month_key_prefix + TimeHelper.get_month())
+        alldays_favo_books = self.book_service.get_rank_books(settings.books_favo_alldays_key)
+        self.context['week_cpc_books'] = week_cpc_books
+        self.context['month_cpc_books'] = month_cpc_books
+        self.context['alldays_cpc_books'] = alldays_cpc_books
+        self.context['week_favo_books'] = week_favo_books
+        self.context['month_favo_books'] = month_favo_books
+        self.context['alldays_favo_books'] = alldays_favo_books
+        self.render('views/rank')
+
     def post(self):
-        kw = self.get_argument('kw', None)
-        if not kw:
-            self.redirect('/')
-        else:
-            books = self.book_service.search(kw)
-            context = {'books' : books, 'kw' : kw, 'now_time' : TimeHelper.time_2_str()}
-            if self.current_user:
-                context['curr_user'] = self.current_user
-            self.render('views/search', context=context)
+        self.get()
 
 class CommonHandler(BaseHandler):
 
-    BOOK_INFO_NAME_SITE_EMPTY = 0;
+    BOOK_INFO_NAME_SITE_EMPTY = 0
     BOOK_INFO_SITE_ERR = 1
     BOOK_INFO_SAVE_ERR = 2
     BOOK_INFO_BOOK_EXISTS = 3
     BOOK_INFO_SAVE_REPEAT = 4
+    BOOK_INFO_SAVE_REPEAT = 4
+
+    SITE_INFO_SITE_EMPTY = 0
+    SITE_INFO_SAVE_ERR = 2
+    SITE_INFO_SAVE_REPEAT = 4
 
     FIRST_SITES = ['qd', 'cs', 'zh', 'k17']
 
     def initialize(self):
         BaseHandler.initialize(self);
-        self.book_service = BookService()
         self.common_service = CommonService()
 
     @except_err()
@@ -279,37 +294,67 @@ class CommonHandler(BaseHandler):
         else:
             self.ajax_result({})
 
+    @except_err()
+    @auto_login()
     def bookinfo(self, params=None):
         op = None
         try:
             op = self.list_parms(params)[0]
         except:
             pass
-        if op:
-            if op == 'save':
-                book_name = self.get_argument('book_name', None)
-                first_site = self.get_argument('first_site', None)
-                if not book_name or not first_site:
-                    self.ajax_result({'succ' : False, 'code' : self.BOOK_INFO_NAME_SITE_EMPTY})
-                elif not first_site in self.FIRST_SITES:
-                    self.ajax_result({'succ' : False, 'code' : self.BOOK_INFO_SITE_ERR})
-                else:
-                    book_info = {'name' : book_name, 'source_short_name' : first_site, 'author' : self.get_argument('author_name', ''), 'source' : self.get_argument('first_url', '')}
-                    book = self.book_service.find_book_by_info(book_info)
-                    if book:
-                        self.ajax_result({'succ' : False, 'code' : self.BOOK_INFO_BOOK_EXISTS, 'b_id' : book['_id']})
-                        return
-                    r = self.common_service.save_book_info(book_info)
-                    if r == 1:
-                        self.ajax_result({'succ' : True})
-                    elif r == 0:
-                        self.ajax_result({'succ' : False, 'code' : self.BOOK_INFO_SAVE_REPEAT})
-                    else:
-                        self.ajax_result({'succ' : False, 'code' : self.BOOK_INFO_SAVE_ERR})
-            else:
-                self.raise_http_error(self.URL_NOT_FOUND)
-        else:
+        if not op:
             self.render('views/add_bookinfo')
+            return
+        if op == 'save':
+            book_name = self.get_argument('book_name', None)
+            first_site = self.get_argument('first_site', None)
+            if not book_name or not first_site:
+                self.ajax_result({'succ' : False, 'code' : self.BOOK_INFO_NAME_SITE_EMPTY})
+            elif not first_site in self.FIRST_SITES:
+                self.ajax_result({'succ' : False, 'code' : self.BOOK_INFO_SITE_ERR})
+            else:
+                book_info = {'name' : book_name, 'source_short_name' : first_site, 'author' : self.get_argument('author_name', ''), 'source' : self.get_argument('first_url', '')}
+                book = self.book_service.find_book_by_info(book_info)
+                if book:
+                    self.ajax_result({'succ' : False, 'code' : self.BOOK_INFO_BOOK_EXISTS, 'b_id' : book['_id']})
+                    return
+                r = self.common_service.save_book_info(book_info)
+                if r == 1:
+                    self.ajax_result({'succ' : True})
+                elif r == 0:
+                    self.ajax_result({'succ' : False, 'code' : self.BOOK_INFO_SAVE_REPEAT})
+                else:
+                    self.ajax_result({'succ' : False, 'code' : self.BOOK_INFO_SAVE_ERR})
+        else:
+            self.raise_http_error(self.URL_NOT_FOUND)
+
+    @except_err()
+    @auto_login()
+    def siteinfo(self, params=None):
+        op = None
+        try:
+            op = self.list_parms(params)[0]
+        except:
+            pass
+        if not op:
+            self.render('views/add_siteinfo')
+            return
+        if op == 'save':
+            site_url = self.get_arguments('site_url', None)
+            if not site_url:
+                self.ajax_result({'succ' : False, 'code' : self.SITE_INFO_SITE_EMPTY})
+            else:
+                site_info = {'site_url' : site_url}
+                r = self.common_service.save_site_info(site_info)
+                if r == 1:
+                    self.ajax_result({'succ' : True})
+                elif r == 0:
+                    self.ajax_result({'succ' : False, 'code' : self.SITE_INFO_SAVE_REPEAT})
+                else:
+                    self.ajax_result({'succ' : False, 'code' : self.SITE_INFO_SAVE_ERR})
+        else:
+            self.raise_http_error(self.URL_NOT_FOUND)
+
 
 class ErrHandler(BaseHandler):
 

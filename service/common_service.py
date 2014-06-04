@@ -9,3 +9,7 @@ class CommonService():
     @redis_exec(rconn=RedisHelper.get_redis_conn())
     def save_book_info(self, book_info, rconn=None):
         return rconn.sadd(settings.unrecord_book_info_queue_key, book_info)
+
+    @redis_exec(rconn=RedisHelper.get_redis_conn())
+    def save_site_info(self, site_info, rconn=None):
+        return rconn.sadd(settings.unrecord_site_info_queue_key, site_info)

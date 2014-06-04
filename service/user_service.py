@@ -58,3 +58,11 @@ class UserService():
     def unfavoall(self, user_id, mongo=None):
         mongo.bookshelf.user_favos.remove({'_id' : user_id})
         return True
+
+    @mongo_exec(mongo=MongoHelper.get_mongo())
+    def append_favos_from_cookie_uid(self, user_id, cookie_user_id, mongo=None):
+        db = mongo.bookshelf.user_favos
+        cookie_user_favos = db.find_one({'_id' : cookie_user_id})
+        if cookie_user_favos and cookie_user_favos['b_ids']:
+            db.update({'_id' : user_id}, {'$addToSet' : {'b_ids' : {'$each' : cookie_user_favos['b_ids']}}})
+        db.delete({'_id' : cookie_user_id})

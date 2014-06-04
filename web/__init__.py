@@ -14,6 +14,8 @@ import time
 from hashlib import sha1
 from utils import settings
 from service.user_service import UserService
+from service.book_service import BookService
+from utils.common import TimeHelper
 
 tenjin_engine = tenjin.Engine(pp=[ tenjin.TrimPreprocessor() ], layout=os.path.join(os.path.dirname(__file__), "views/_layout.html"))
 
@@ -27,11 +29,22 @@ class BaseHandler(RequestHandler):
 
     _redis = RedisHelper.get_redis_conn(db=settings.SESSION_REDIS_DB)
 
-    def initialize(self):
+    def initialize(self, init_context=True):
         self.user_service = UserService()
+        self.book_service = BookService()
+        self.context = self.__init_context(init_context)
 
-    def render(self, template_name_prefix, template_name_suffix='.html', context={}, layout=True):
-        self.write(tenjin_engine.render(os.path.join(os.path.dirname(__file__), template_name_prefix + template_name_suffix), context, layout=layout))
+    def __init_context(self, init_context):
+        context = {}
+        if init_context:
+            hot_kws = self.book_service.get_hot_search_kws(settings.hot_kws_show_count)
+            context['hot_kws'] = hot_kws
+            context['now_time'] = TimeHelper.time_2_str()
+        return context
+
+    def render(self, template_name_prefix, template_name_suffix='.html', layout=True):
+        self.write(tenjin_engine.render(os.path.join(os.path.dirname(__file__), template_name_prefix + template_name_suffix), self.context, layout=layout))
+        self.finish()
 
 #     def get_current_user(self):
 #         user_id = self.get_secure_cookie("user_id")
@@ -47,22 +60,13 @@ class BaseHandler(RequestHandler):
             self.set_status(err_code)
             self.finish()
         else:
-            self.render('views/err', context={'err_code' : err_code}, layout=False)
+            self.context['err_code'] = err_code
+            self.render('views/err', layout=False)
 #             raise HTTPError(err_code)
 
     def ajax_result(self, result):
         self.write(json.dumps(result, ensure_ascii=False))
-
-    def auto_login(self):
-        user_id = self.get_secure_cookie('user_id')
-        save_me = self.get_secure_cookie('save_me')
-        if user_id and save_me:
-            user = self.user_service.find_by_id(user_id)
-            if user:
-                self.current_user = user
-                self.__set_session_attr__('user', user)
-                return True
-        return False
+        self.finish()
 
     def list_parms(self, params, empty_err_code=None):
         if not params:
@@ -153,6 +157,7 @@ def auto_login():
                 user = eval(user)
             if user:
                 request.current_user = user
+                request.context['curr_user'] = user
             return fn(request, *args)
         return login
     return wrapper

@@ -46,3 +46,12 @@ class TimeHelper():
                                }
             t = delta_time_dict[delta_unit](t, delta)
         return t.strftime(frt)
+
+    @staticmethod
+    def get_week_no():
+        return datetime.datetime.now().strftime('%Y%W')
+
+    @staticmethod
+    def get_month():
+        return datetime.datetime.now().strftime('%Y%m')
+

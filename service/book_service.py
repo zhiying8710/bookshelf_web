@@ -4,6 +4,7 @@
 
 from utils.conns_helper import mongo_exec, MongoHelper, redis_exec, RedisHelper
 from utils import settings
+from utils.common import TimeHelper
 
 class BookService():
 
@@ -98,3 +99,43 @@ class BookService():
         if source:
             conditions['source'] = source
         return mongo.bookshelf.books.find_one(conditions)
+
+    @redis_exec(rconn=RedisHelper.get_redis_conn())
+    def record_book_cpc(self, _id, rconn=None):
+        key = settings.books_cpc_week_key_prefix + str(TimeHelper.get_week_no())
+        rconn.zincrby(key, _id, 1)
+        rconn.expire(key, 7 * 24 * 60 * 60)
+        key = settings.books_cpc_month_key_prefix + str(TimeHelper.get_month())
+        rconn.zincrby(key, _id, 1)
+        rconn.expire(key, 30 * 24 * 60 * 60)
+        rconn.zincrby(settings.books_cpc_alldays_key, _id, 1)
+
+    @redis_exec(rconn=RedisHelper.get_redis_conn())
+    def record_book_favo(self, _id, rconn=None):
+        key = settings.books_favo_week_key_prefix + str(TimeHelper.get_week_no())
+        rconn.zincrby(key, _id, 1)
+        rconn.expire(key, 7 * 24 * 60 * 60)
+        key = settings.books_favo_month_key_prefix + str(TimeHelper.get_month())
+        rconn.zincrby(key, _id, 1)
+        rconn.expire(key, 30 * 24 * 60 * 60)
+        rconn.zincrby(settings.books_favo_alldays_key, _id, 1)
+
+    @redis_exec(rconn=RedisHelper.get_redis_conn())
+    def record_search_kw(self, kw, rconn=None):
+        rconn.zincrby(settings.search_kws_record_key, kw, 1)
+
+    @redis_exec(rconn=RedisHelper.get_redis_conn())
+    def get_hot_search_kws(self, show_count, rconn=None):
+        return rconn.zrevrange(settings.search_kws_record_key, 0, show_count)
+
+    @redis_exec(rconn=RedisHelper.get_redis_conn())
+    def get_rank_books(self, key, rconn=None):
+        _ids = rconn.zrevrange(key, 0, settings.rank_books_count)
+        if _ids:
+            return self.find_book_by_ids(_ids)
+        else:
+            return []
+
+    @mongo_exec(mongo=MongoHelper.get_mongo())
+    def find_book_by_ids(self, _ids, mongo=None):
+        return mongo.bookshelf.books.find({'_id' : {'$in' : _ids}})

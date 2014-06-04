@@ -59,7 +59,6 @@
                         <?py if 'curr_user' in _context and _context['curr_user'] and not _context['curr_user']['is_cookie']: ?>
                         <span style="color: white;">欢迎您, ${_context['curr_user']['user_name']}&nbsp;&nbsp;</span> <a href="/authority/logout"><span>退出</span></a>
                         <?py else: ?>
-                        ${_context['curr_user']['user_name']}
                         <a href="/authority"><span>登录/注册</span></a>
                         <?py #endif ?>
                     </li>

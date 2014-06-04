@@ -164,11 +164,11 @@ def auto_login():
 
 def logout():
     def wrapper(fn):
-        def login(request, *args):
+        def _do(request, *args):
             request.__destory_session__()
             request.set_secure_cookie('save_me', '', 0)
             return fn(request, *args)
-        return login
+        return _do
     return wrapper
 
 def except_err():

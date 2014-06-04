@@ -65,4 +65,4 @@ class UserService():
         cookie_user_favos = db.find_one({'_id' : cookie_user_id})
         if cookie_user_favos and cookie_user_favos['b_ids']:
             db.update({'_id' : user_id}, {'$addToSet' : {'b_ids' : {'$each' : cookie_user_favos['b_ids']}}})
-        db.delete({'_id' : cookie_user_id})
+        db.remove({'_id' : cookie_user_id})

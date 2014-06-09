@@ -14,7 +14,8 @@ from web.handlers import MainHandler, LoginRegHandler, CommonHandler,\
 
 settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static"),
-    "cookie_secret" : _base64("bingege@soshu.com")
+    "cookie_secret" : _base64("bingege@soshu.com"),
+    "gzip" : True,
 }
 
 application = tornado.web.Application([

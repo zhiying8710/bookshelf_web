@@ -10,3 +10,4 @@ project.egg-info
 setup.py
 *.log
 *.cache
+nohup.out

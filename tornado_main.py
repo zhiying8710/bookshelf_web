@@ -26,7 +26,7 @@ application = tornado.web.Application([
     (r"/book/([a-zA-Z0-9]+)/?([a-zA-Z]*)/?([a-zA-Z0-9/]*)", BookHandler),
     (r"/user/([a-zA-Z0-9]+)/?([a-zA-Z0-9]*)", UserHandler),
     (r"/rank", RankHandler),
-    (r"/.+", ErrHandler),
+    (r"/(.+)", ErrHandler),
 ], **settings)
 
 

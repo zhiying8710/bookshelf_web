@@ -8,6 +8,7 @@ from service.section_service import SectionService
 from service.common_service import CommonService
 import tornado.web
 from utils import settings
+import os
 
 class MainHandler(BaseHandler):
 
@@ -358,8 +359,19 @@ class CommonHandler(BaseHandler):
 
 class ErrHandler(BaseHandler):
 
-    def get(self):
+    def get(self, res):
+        if res:
+            try:
+                fns = os.path.dirname(__file__).split(os.sep)[:-1]
+                fns.append(res)
+                rf = open(os.sep.join(fns))
+                self.finish(rf.read())
+            except:
+                self.raise_http_error(self.URL_NOT_FOUND)
+            finally:
+                return
         self.raise_http_error(self.URL_NOT_FOUND)
 
-    def post(self):
+    def post(self, res):
         self.get()
+

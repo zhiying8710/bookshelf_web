@@ -45,6 +45,8 @@ class BaseHandler(RequestHandler):
             for book in top_books:
                 descprition_kws.append(book['name'])
             context['descprition_kws'] = ' '.join(descprition_kws)
+        else:
+            context['descprition_kws'] = ''
         return context
 
     def render(self, template_name_prefix, template_name_suffix='.html', layout=True):

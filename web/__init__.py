@@ -40,13 +40,11 @@ class BaseHandler(RequestHandler):
             hot_kws = self.book_service.get_hot_search_kws(settings.hot_kws_show_count)
             context['hot_kws'] = hot_kws
             context['now_time'] = TimeHelper.time_2_str()
-            top_books = self.book_service.get_rank_books(settings.books_cpc_alldays_key)
-            descprition_kws = []
-            for book in top_books:
-                descprition_kws.append(book['name'])
-            context['descprition_kws'] = ' '.join(descprition_kws)
-        else:
-            context['descprition_kws'] = ''
+        top_books = self.book_service.get_rank_books(settings.books_cpc_alldays_key)
+        descprition_kws = []
+        for book in top_books:
+            descprition_kws.append(book['name'])
+        context['descprition_kws'] = ' '.join(descprition_kws)
         return context
 
     def render(self, template_name_prefix, template_name_suffix='.html', layout=True):

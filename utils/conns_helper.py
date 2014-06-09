@@ -20,9 +20,9 @@ class MongoHelper():
 
 def mongo_exec(mongo):
     def wrapper(fn):
-        def _exec(*args):
+        def _exec(*args, **kwargs):
             try:
-                return fn(mongo = mongo, *args)
+                return fn(mongo = mongo, *args, **kwargs)
             except:
                 raise Exception(traceback.format_exc())
             finally:
@@ -43,9 +43,9 @@ class RedisHelper():
 
 def redis_exec(rconn):
     def wrapper(fn):
-        def _exec(*args):
+        def _exec(*args, **kwargs):
             try:
-                return fn(rconn = rconn, *args)
+                return fn(rconn = rconn, *args, **kwargs)
             except:
                 raise Exception(traceback.format_exc())
             finally:

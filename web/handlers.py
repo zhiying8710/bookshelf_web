@@ -154,6 +154,10 @@ class UserHandler(BaseHandler):
             user_id = self.current_user['_id']
         else:
             user_id = self.get_secure_cookie('user_id')
+        user_id = self.user_service.favo(user_id, b_id)
+        if user_id:
+            self.__set_session_attr__('user', self.user_service.find_by_id(user_id))
+            self.set_secure_cookie('user_id', user_id, 365 * 10)
         self.ajax_result({'succ' : self.user_service.favo(user_id, b_id)})
         self.book_service.record_book_favo(b_id)
 

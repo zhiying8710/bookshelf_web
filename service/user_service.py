@@ -41,13 +41,14 @@ class UserService():
         else:
             user = self.find_by_id(user_id)
         if not user:
-            return False
+            return None
+        user_id = user['_id']
         user_favos = mongo.bookshelf.user_favos.find_one({'_id' : user_id})
         if user_favos:
             mongo.bookshelf.user_favos.update({'_id' : user_id}, {'$addToSet' : {'b_ids' : b_id}})
         else:
             mongo.bookshelf.user_favos.insert({'_id' : user_id, 'b_ids' : [b_id]})
-        return True
+        return user_id
 
     @mongo_exec(mongo=MongoHelper.get_mongo())
     def unfavo(self, user_id, b_ids, mongo=None):
